@@ -1,11 +1,11 @@
 use crate::{Date, SolutionRegistry};
 use clap::{Parser, Subcommand};
 use dotenv;
+use reqwest::header::COOKIE;
 use std::env;
 use std::fs::{self, File};
 use std::io::{self, Write};
 use std::path::PathBuf;
-// use reqwest::*;
 
 #[macro_export]
 macro_rules! benchmark_fn {
@@ -69,26 +69,36 @@ pub fn fetch_input(date: &Date) -> String {
         date.1
     ));
 
+    // If file exists, return cached input to avoid query AOC every time
     if solution_path.exists() {
-        fs::read_to_string(solution_path).unwrap()
-    } else {
-        let _session_token = dotenv::var("AOC_SESSION_TOKEN").unwrap();
-        //
-        // let url = format!("https://adventofcode.com/{}/day/{}/input", date.0, date.1);
-        //
-        // let client = Client::new();
-        // let response = client
-        //     .get(&url)
-        //     .header(COOKIE, format!("session={}", session_token))
-        //     .send()
-        //     .text();
-        //
-        // let mut f = fs::File::create::new(solution_path);
-        // f.write_all(response)?;
-        //
-        // reponse
-        panic!("Querying website not implemented yet")
+        return fs::read_to_string(solution_path).expect("Failed to read cached file");
     }
+
+    let session_token = dotenv::var("AOC_SESSION_TOKEN").expect("AOC_SESSION_TOKEN not set in .env, please set before running");
+    let url = format!("https://adventofcode.com/{}/day/{}/input", date.0, date.1);
+
+    let client = reqwest::blocking::Client::new();
+    let response = client
+        .get(&url)
+        .header(COOKIE, format!("session={}", session_token))
+        .header("User-Agent", "advent-of-code-fetcher/1.0")
+        .send()
+        .expect("Failed to send request");
+
+    if !response.status().is_success() {
+        panic!("HTTP error: {}", response.status());
+    }
+
+    let input = response.text().expect("Failed to read response");
+
+    // Create puzzle inputs directory if it doesn't exist
+    if let Some(parent) = solution_path.parent() {
+        fs::create_dir_all(parent).expect("Failed to create directory");
+    }
+
+    fs::write(&solution_path, &input).expect("Failed to write file");
+
+    input
 }
 
 // List of all completed solutions
