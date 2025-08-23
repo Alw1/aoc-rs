@@ -1,6 +1,6 @@
 use aoc_rust::{
     benchmark_fn,
-    utils::{Cli, Commands, build_registry, fetch_input},
+    utils::{Cli, Commands, build_registry, create_year, fetch_input, list_solutions},
 };
 use clap::Parser;
 use std::fs;
@@ -20,8 +20,8 @@ fn main() {
             println!("Part 1: {}", solution.part1(&input));
             println!("Part 2: {}", solution.part2(&input));
         }
-        Commands::Test { date, test } => {
-            let input = fs::read_to_string(test).unwrap();
+        Commands::Test { date, file } => {
+            let input = fs::read_to_string(file).unwrap();
             let solution = solutions.get(&date).unwrap();
 
             println!("Advent of Code {} Solutions:", date.0);
@@ -36,7 +36,12 @@ fn main() {
             benchmark_fn!(solution.part2(&input));
         }
         Commands::List { year } => {
-            todo!();
+            list_solutions(Some(year), &solutions);
+        }
+        Commands::Create { year } => {
+            if let Err(e) = create_year(&year) {
+                eprintln!("Error creating year templates: {}", e);
+            }
         }
     };
 }

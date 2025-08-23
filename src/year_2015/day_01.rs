@@ -7,8 +7,6 @@ impl Solution for Puzzle {
         let mut floor = 0;
 
         for x in input.chars() {
-            println!("{}", x);
-
             if x == '(' {
                 floor += 1;
             } else if x == ')' {
@@ -24,8 +22,6 @@ impl Solution for Puzzle {
         let mut basement = 0;
 
         for (i, x) in input.chars().enumerate() {
-            println!("{} {}", i, x);
-
             if x == '(' {
                 floor += 1;
             } else if x == ')' {
