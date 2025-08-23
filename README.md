@@ -22,5 +22,5 @@ Options:
 
 
 ### Notes
-- Automatic fetching of puzzle inputs doesn't work yet, use the ```test``` subcommand for now until fetching is implemented
+- Before using for the first time, find your [session cookie](https://github.com/wimglenn/advent-of-code-wim/issues/1) and put it in the .env file at the root of the project, otherwise automatic input fetching will not work
 - README will eventually contain tables containing benchmarks for each solution by year
