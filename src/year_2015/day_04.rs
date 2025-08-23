@@ -1,4 +1,4 @@
-use crate::utils::Solution;
+use crate::Solution;
 use md5::*;
 
 pub struct Puzzle;

@@ -1,21 +1,11 @@
+use crate::{Date, SolutionRegistry};
 use clap::{Parser, Subcommand};
 use dotenv;
-use std::collections::HashMap;
 use std::env;
 use std::fs::{self, File};
 use std::io::{self, Write};
 use std::path::PathBuf;
 // use reqwest::*;
-
-pub trait Solution {
-    fn part1(&self, input: &str) -> String;
-    fn part2(&self, input: &str) -> String;
-
-    // fn completed(&self) -> bool;
-}
-
-type Date = (u32, u8);
-pub type SolutionRegistry = HashMap<Date, Box<dyn Solution>>;
 
 #[macro_export]
 macro_rules! benchmark_fn {
@@ -29,41 +19,46 @@ macro_rules! benchmark_fn {
 }
 
 #[macro_export]
-macro_rules! register_year {
-    ($map:ident, $module:ident, $year:expr) => {
-        use crate::$module;
-        $map.insert(($year, 1), Box::new($module::day_01::Puzzle));
-        $map.insert(($year, 2), Box::new($module::day_02::Puzzle));
-        $map.insert(($year, 3), Box::new($module::day_03::Puzzle));
-        $map.insert(($year, 4), Box::new($module::day_04::Puzzle));
-        $map.insert(($year, 5), Box::new($module::day_05::Puzzle));
-        $map.insert(($year, 6), Box::new($module::day_06::Puzzle));
-        $map.insert(($year, 7), Box::new($module::day_07::Puzzle));
-        $map.insert(($year, 8), Box::new($module::day_08::Puzzle));
-        $map.insert(($year, 9), Box::new($module::day_09::Puzzle));
-        $map.insert(($year, 10), Box::new($module::day_10::Puzzle));
-        $map.insert(($year, 11), Box::new($module::day_11::Puzzle));
-        $map.insert(($year, 12), Box::new($module::day_12::Puzzle));
-        $map.insert(($year, 13), Box::new($module::day_13::Puzzle));
-        $map.insert(($year, 14), Box::new($module::day_14::Puzzle));
-        $map.insert(($year, 15), Box::new($module::day_15::Puzzle));
-        $map.insert(($year, 16), Box::new($module::day_16::Puzzle));
-        $map.insert(($year, 17), Box::new($module::day_17::Puzzle));
-        $map.insert(($year, 18), Box::new($module::day_18::Puzzle));
-        $map.insert(($year, 19), Box::new($module::day_19::Puzzle));
-        $map.insert(($year, 20), Box::new($module::day_20::Puzzle));
-        $map.insert(($year, 21), Box::new($module::day_21::Puzzle));
-        $map.insert(($year, 22), Box::new($module::day_22::Puzzle));
-        $map.insert(($year, 23), Box::new($module::day_23::Puzzle));
-        $map.insert(($year, 24), Box::new($module::day_24::Puzzle));
-        $map.insert(($year, 25), Box::new($module::day_25::Puzzle));
-    };
-}
+macro_rules! register_years {
+    ($($module:ident => $year:expr),* $(,)?) => {
+        // Declare all modules
+        $(pub mod $module;)*
 
-pub fn build_registry() -> SolutionRegistry {
-    let mut registry = SolutionRegistry::new();
-    register_year!(registry, year_2015, 2015);
-    registry
+        pub fn build_registry() -> SolutionRegistry {
+            let mut registry = SolutionRegistry::new();
+
+            $(
+                use crate::$module;
+                registry.insert(($year, 1), Box::new($module::day_01::Puzzle));
+                registry.insert(($year, 2), Box::new($module::day_02::Puzzle));
+                registry.insert(($year, 3), Box::new($module::day_03::Puzzle));
+                registry.insert(($year, 4), Box::new($module::day_04::Puzzle));
+                registry.insert(($year, 5), Box::new($module::day_05::Puzzle));
+                registry.insert(($year, 6), Box::new($module::day_06::Puzzle));
+                registry.insert(($year, 7), Box::new($module::day_07::Puzzle));
+                registry.insert(($year, 8), Box::new($module::day_08::Puzzle));
+                registry.insert(($year, 9), Box::new($module::day_09::Puzzle));
+                registry.insert(($year, 10), Box::new($module::day_10::Puzzle));
+                registry.insert(($year, 11), Box::new($module::day_11::Puzzle));
+                registry.insert(($year, 12), Box::new($module::day_12::Puzzle));
+                registry.insert(($year, 13), Box::new($module::day_13::Puzzle));
+                registry.insert(($year, 14), Box::new($module::day_14::Puzzle));
+                registry.insert(($year, 15), Box::new($module::day_15::Puzzle));
+                registry.insert(($year, 16), Box::new($module::day_16::Puzzle));
+                registry.insert(($year, 17), Box::new($module::day_17::Puzzle));
+                registry.insert(($year, 18), Box::new($module::day_18::Puzzle));
+                registry.insert(($year, 19), Box::new($module::day_19::Puzzle));
+                registry.insert(($year, 20), Box::new($module::day_20::Puzzle));
+                registry.insert(($year, 21), Box::new($module::day_21::Puzzle));
+                registry.insert(($year, 22), Box::new($module::day_22::Puzzle));
+                registry.insert(($year, 23), Box::new($module::day_23::Puzzle));
+                registry.insert(($year, 24), Box::new($module::day_24::Puzzle));
+                registry.insert(($year, 25), Box::new($module::day_25::Puzzle));
+            )*
+
+            registry
+        }
+    };
 }
 
 pub fn fetch_input(date: &Date) -> String {
@@ -117,8 +112,7 @@ pub fn create_year(year: &u32) -> io::Result<()> {
     let project_dir = env!("CARGO_MANIFEST_DIR");
     let year_dir = PathBuf::from(format!("{}/src/year_{}", project_dir, year));
 
-    let puzzle_template = r#"#![allow(warnings)]
-use crate::utils::Solution;
+    let puzzle_template = r#"use crate::Solution;
 
 pub struct Puzzle;
 
@@ -133,7 +127,7 @@ impl Solution for Puzzle {
 }
 "#;
 
-    let module_template = r#"#![allow(warnings)]
+    let module_template = r#"#[allow(unused_variables, dead_code)]
 pub mod day_01;
 pub mod day_02;
 pub mod day_03;

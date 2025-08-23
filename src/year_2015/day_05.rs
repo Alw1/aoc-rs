@@ -1,4 +1,4 @@
-use crate::utils::Solution;
+use crate::Solution;
 use fancy_regex::*;
 
 pub struct Puzzle;

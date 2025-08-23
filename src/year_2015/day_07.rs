@@ -1,5 +1,5 @@
 #![allow(warnings)]
-use crate::utils::Solution;
+use crate::Solution;
 use std::collections::HashMap;
 
 pub struct Puzzle;

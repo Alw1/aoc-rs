@@ -1,4 +1,4 @@
-use crate::utils::Solution;
+use crate::Solution;
 use std::cmp;
 
 pub struct Puzzle;

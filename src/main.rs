@@ -1,6 +1,6 @@
 use aoc_rust::{
-    benchmark_fn,
-    utils::{Cli, Commands, build_registry, create_year, fetch_input, list_solutions},
+    benchmark_fn, build_registry,
+    utils::{Cli, Commands, create_year, fetch_input, list_solutions},
 };
 use clap::Parser;
 use std::fs;

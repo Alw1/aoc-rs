@@ -1,6 +1,5 @@
-use crate::utils::Solution;
+use crate::Solution;
 use fancy_regex::*;
-use itertools::Itertools;
 
 pub struct Puzzle;
 
@@ -31,7 +30,7 @@ fn parse_input(input: &str) -> Vec<Instruction> {
 
     // let test_pattern = r"(turn on|turn off|toggle)
 
-    let mut instructions = Vec::new();
+    let instructions = Vec::new();
 
     instructions
 }
