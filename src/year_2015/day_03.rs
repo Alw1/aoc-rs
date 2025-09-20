@@ -11,7 +11,6 @@ impl Solution for Puzzle {
         let mut location: Coordinate = (0, 0);
 
         for direction in input.chars() {
-
             // Drop present at current house
             houses.insert(location, 1);
 
@@ -29,7 +28,7 @@ impl Solution for Puzzle {
                     houses.insert(location, x + 1);
                 }
                 _ => {
-                    // Else, drop first present 
+                    // Else, drop first present
                     houses.insert(location, 1);
                 }
             };
@@ -46,7 +45,6 @@ impl Solution for Puzzle {
         let mut location: &mut Coordinate = &mut santa_location;
 
         for direction in input.chars() {
-
             // Drop present at current house
             houses.insert(*location, 1);
 
@@ -64,19 +62,18 @@ impl Solution for Puzzle {
                     houses.insert(*location, x + 1);
                 }
                 _ => {
-                    // Else, drop first present 
+                    // Else, drop first present
                     houses.insert(*location, 1);
                 }
             };
 
-            if santas_turn {
-                location = &mut santa_location;
-            }
-            else {
-                location = &mut robot_location;
-            }
+            location = if santas_turn {
+                &mut santa_location
+            } else {
+                &mut robot_location
+            };
 
-           santas_turn = !santas_turn; 
+            santas_turn = !santas_turn;
         }
 
         houses.len().to_string()

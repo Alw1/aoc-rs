@@ -13,8 +13,7 @@ macro_rules! benchmark_fn {
         let start_time = Instant::now();
         let result = $func_call;
         let elapsed_time = start_time.elapsed();
-        println!("{:?} executed in: {:?}", $func_call, elapsed_time);
-        result
+        elapsed_time
     }};
 }
 
@@ -74,7 +73,9 @@ pub fn fetch_input(date: &Date) -> String {
         return fs::read_to_string(solution_path).expect("Failed to read cached file");
     }
 
-    let session_token = dotenv::var("AOC_SESSION_TOKEN").expect("AOC_SESSION_TOKEN not set in .env, please set before running");
+    let session_token = dotenv::var("AOC_SESSION_TOKEN")
+        .expect("AOC_SESSION_TOKEN not set in .env, please set before running");
+
     let url = format!("https://adventofcode.com/{}/day/{}/input", date.0, date.1);
 
     let client = reqwest::blocking::Client::new();
@@ -128,16 +129,16 @@ pub struct Puzzle;
 
 impl Solution for Puzzle {
     fn part1(&self, input: &str) -> String {
-        todo!();
+        "Not Implemented".to_string()
     }
 
     fn part2(&self, input: &str) -> String {
-        todo!();
+        "Not Implemented".to_string()
     }
 }
 "#;
 
-    let module_template = r#"#[allow(unused_variables, dead_code)]
+    let module_template = r#"#![allow(unused_variables, dead_code)]
 pub mod day_01;
 pub mod day_02;
 pub mod day_03;
@@ -177,7 +178,7 @@ pub mod day_25;
     f1.write_all(module_template.as_bytes())?;
 
     for day in 1..=25 {
-        let filename = format!("day{:02}.rs", day);
+        let filename = format!("day_{:02}.rs", day);
         let mut file = File::create(year_dir.join(filename))?;
         file.write_all(puzzle_template.as_bytes())?;
     }

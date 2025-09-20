@@ -15,16 +15,11 @@
             # Rust toolchain
             rustc
             cargo
-            rustfmt
-            clippy
-            rust-analyzer
 
             # System dependencies
             pkg-config
             openssl
             openssl.dev
-
-            cargo-watch
           ];
 
           shellHook = ''
