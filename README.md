@@ -22,5 +22,4 @@ Options:
 
 
 ### Notes
-- Before using for the first time, find your [session cookie](https://github.com/wimglenn/advent-of-code-wim/issues/1) and put it in the .env file at the root of the project, otherwise automatic input fetching will not work
-- README will eventually contain tables containing benchmarks for each solution by year
+- Before using for the first time, find your [session cookie](https://github.com/wimglenn/advent-of-code-wim/issues/1) and put it in the .env file at the root of the project, otherwise automatic input fetching will not work. Your .env file should look like this `AOC_SESSION_TOKEN={your token here}`

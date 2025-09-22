@@ -32,9 +32,6 @@ fn main() {
             let input = fetch_input(&date);
             let solution = solutions.get(&date).unwrap();
 
-            benchmark_fn!(solution.part1(&input));
-            benchmark_fn!(solution.part2(&input));
-
             println!("Advent of Code {} Solutions Benchmark:", date.0);
             println!("Part 1 took {:?}", benchmark_fn!(solution.part1(&input))); 
             println!("Part 2 took {:?}", benchmark_fn!(solution.part2(&input))); 
